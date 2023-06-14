@@ -7,3 +7,7 @@ variable instance_type {
     type = string
     default = "g4dn.4xlarge"
 }
+
+output ip_address {
+    value = module.resources.ip_address
+}

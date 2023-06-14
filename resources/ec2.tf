@@ -26,6 +26,7 @@ resource aws_instance instance {
     subnet_id = aws_subnet.public_subnet.id
     ami = data.aws_ami.al2.id
     key_name = "intern_data_processing"
+    security_groups = [ aws_security_group.allow_ssh.id ]
 }
 
 resource aws_scheduler_schedule starter {
@@ -104,4 +105,8 @@ resource aws_iam_role start_stop_ec2 {
 resource aws_iam_role_policy_attachment role_attach {
     role = aws_iam_role.start_stop_ec2.name
     policy_arn = aws_iam_policy.iam_policy.arn
+}
+
+output ip_address {
+    value = aws_instance.instance.public_ip
 }
