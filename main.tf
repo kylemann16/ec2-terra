@@ -8,6 +8,10 @@ variable instance_type {
     default = "g4dn.4xlarge"
 }
 
+variable emails {
+    type = list(string)
+}
+
 output ip_address {
     value = module.resources.ip_address
 }

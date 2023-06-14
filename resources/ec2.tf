@@ -37,7 +37,7 @@ resource aws_scheduler_schedule starter {
     }
 
     schedule_expression_timezone = "America/Chicago"
-    schedule_expression = "cron(25 10 ? * MON-FRI *)"
+    schedule_expression = "cron(0 8 ? * MON-FRI *)"
 
     target {
         arn      = "arn:aws:scheduler:::aws-sdk:ec2:startInstances"
@@ -58,7 +58,6 @@ resource aws_scheduler_schedule stopper {
     }
     schedule_expression_timezone = "America/Chicago"
     schedule_expression = "cron(0 17 ? * MON-FRI *)"
-    # schedule_expression = "cron(0 17 ? * MON-FRI *)"
 
     target {
         arn      = "arn:aws:scheduler:::aws-sdk:ec2:stopInstances"
