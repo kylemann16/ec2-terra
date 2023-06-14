@@ -9,7 +9,6 @@ resource tls_private_key rsa_key {
 }
 
 resource local_file ssh_pem {
-    # depends_on = [ null_resource.prepare_dir ]
     content = tls_private_key.rsa_key.private_key_pem
     filename = "${path.module}/../.secrets/ssh.pem"
     file_permission = "400"

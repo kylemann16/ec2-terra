@@ -44,13 +44,13 @@ resource aws_security_group allow_ssh {
     }
 }
 
-resource "aws_route_table_association" "subnet_route_connections" {
-    subnet_id      = aws_subnet.public_subnet.id
-    route_table_id = aws_route_table.route_table.id
+resource aws_route_table route_table {
+    vpc_id = aws_vpc.network.id
 }
 
-resource "aws_route_table" "route_table" {
-    vpc_id = aws_vpc.network.id
+resource aws_route_table_association subnet_route_connections {
+    subnet_id      = aws_subnet.public_subnet.id
+    route_table_id = aws_route_table.route_table.id
 }
 
 resource aws_route gateway_connect {
@@ -59,6 +59,6 @@ resource aws_route gateway_connect {
     destination_cidr_block = "0.0.0.0/0"
 }
 
-resource "aws_internet_gateway" "gateway" {
+resource aws_internet_gateway gateway {
     vpc_id = aws_vpc.network.id
 }
