@@ -10,6 +10,8 @@ FILE_PATH=".secrets/ssh.pem"
 
 echo -e $(aws secretsmanager get-secret-value \
     --secret-id keypairs/intern_data_processing \
-    --query SecretString | tr -d '"') > $FILE_PATH
+    --query SecretString \
+    --region us-east-1 \
+    | tr -d '"') > $FILE_PATH
 
 chmod 400 $FILE_PATH
