@@ -25,7 +25,7 @@ resource aws_instance instance {
     user_data = filebase64("${path.module}/userdata.sh")
     subnet_id = aws_subnet.public_subnet.id
     ami = data.aws_ami.al2.id
-    key_name = "intern_data_processing"
+    key_name = aws_key_pair.ec2_key_pair.key_name
     security_groups = [ aws_security_group.allow_ssh.id ]
 }
 

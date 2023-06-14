@@ -15,5 +15,5 @@ This set of commands will:
 To then connect to the generated ec2 instance run:
 
 ```
-ssh -i .secrets/ssh.pem ec2-user@${instance_id}
+ssh -i .secrets/ssh.pem ec2-user@${instance_ip}
 ```
