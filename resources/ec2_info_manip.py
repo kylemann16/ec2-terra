@@ -17,11 +17,6 @@ REGION = os.environ.get("AWS_REGION", "us-east-1")
 KMS_CLIENT = boto3.client("kms", region_name=REGION)
 
 def decrypt_url(encrypted_url: str) -> str:
-    """Decrypt encrypted URL with KMS
-
-    :param encrypted_url: URL to decrypt with KMS
-    :returns: plaintext URL
-    """
     try:
         decrypted_payload = KMS_CLIENT.decrypt(
             CiphertextBlob=base64.b64decode(encrypted_url)
@@ -34,12 +29,6 @@ def decrypt_url(encrypted_url: str) -> str:
 def format_default(
     message: Union[str, Dict], subject: Optional[str] = None
 ) -> Dict[str, Any]:
-    """
-    Default formatter, converting event into Slack message format
-
-    :params message: SNS message body containing message/event
-    :returns: formatted Slack message payload
-    """
 
     attachments = {
         "fallback": "A new message",
@@ -65,24 +54,8 @@ def format_default(
 def get_slack_message_payload(
     message: Union[str, Dict], region: str, subject: Optional[str] = None
 ) -> Dict:
-    """
-    Parse notification message and format into Slack message payload
 
-    :params message: SNS message body notification payload
-    :params region: AWS region where the event originated from
-    :params subject: Optional subject line for Slack notification
-    :returns: Slack message payload
-    """
-
-    # slack_channel = os.environ["SLACK_CHANNEL"]
-    # slack_username = os.environ["SLACK_USERNAME"]
-    # slack_emoji = os.environ["SLACK_EMOJI"]
-
-    payload = {
-        # "channel": slack_channel,
-        # "username": slack_username,
-        # "icon_emoji": slack_emoji,
-    }
+    payload = { }
     attachment = None
 
     if isinstance(message, str):
@@ -112,13 +85,6 @@ def get_slack_message_payload(
 
 
 def send_slack_notification(payload: Dict[str, Any]) -> str:
-    """
-    Send notification payload to Slack
-
-    :params payload: formatted Slack message payload
-    :returns: response details from sending notification
-    """
-
     slack_url = os.environ["SLACK_WEBHOOK_URL"]
     if not slack_url.startswith("http"):
         slack_url = decrypt_url(slack_url)
@@ -137,6 +103,7 @@ def send_slack_notification(payload: Dict[str, Any]) -> str:
 
 def lambda_handler(event: Dict[str, Any], context: Dict[str, Any]) -> str:
     print(f"Event: {json.dumps(event)}")
+
     for record in event["Records"]:
         sns = record["Sns"]
         subject = sns["Subject"]

@@ -1,5 +1,11 @@
 ### STARTUP
 
+Edit `.auto.tfvars` in the base directory to have the required variable `slack_webhook_url` as well as any others from `main.tf` you'd like to change.
+
+```
+slack_webhook_url = "https://slack_webhook_url/asdfasd/asfdasdf"
+```
+
 ```
 source env.sh
 terraform init
