@@ -1,3 +1,8 @@
+resource random_string run_id {
+    length = 5
+    special = false
+}
+
 variable instance_type {
     type = string
     default = "g4dn.4xlarge"
@@ -20,17 +25,20 @@ data aws_ami al2 {
 resource aws_instance instance {
     instance_type = var.instance_type
     tags = {
-        Name = "Intern Data Processor"
+        Name = "Intern_Data_Processor_${random_string.run_id.result}"
     }
     user_data = filebase64("${path.module}/userdata.sh")
-    subnet_id = aws_subnet.public_subnet.id
+    subnet_id = aws_subnet.public_subnets[1].id
     ami = data.aws_ami.al2.id
     key_name = aws_key_pair.ec2_key_pair.key_name
     security_groups = [ aws_security_group.allow_ssh.id ]
+    # instance_market_options {
+    #     market_type = "spot"
+    # }
 }
 
 resource aws_scheduler_schedule starter {
-    name = "EC2_Cron_starter"
+    name = "EC2_Cron_starter_${random_string.run_id.result}"
     group_name = "default"
     flexible_time_window {
         mode = "OFF"
@@ -51,7 +59,7 @@ resource aws_scheduler_schedule starter {
 }
 
 resource aws_scheduler_schedule stopper {
-    name = "EC2_Cron_stopper"
+    name = "EC2_Cron_stopper_${random_string.run_id.result}"
     group_name = "default"
     flexible_time_window {
         mode = "OFF"
@@ -71,7 +79,7 @@ resource aws_scheduler_schedule stopper {
 }
 
 resource aws_iam_policy iam_policy {
-    name = "EC2_Start_Stop_IAM_Policy"
+    name = "EC2_Start_Stop_IAM_Policy_${random_string.run_id.result}"
     policy = jsonencode({
             Version = "2012-10-17"
             Statement = [{
@@ -88,7 +96,7 @@ resource aws_iam_policy iam_policy {
 }
 
 resource aws_iam_role start_stop_ec2 {
-    name = "EC2_Start_and_Stop"
+    name = "EC2_Start_and_Stop_${random_string.run_id.result}"
     assume_role_policy = jsonencode({
         Version = "2012-10-17"
         Statement = [{

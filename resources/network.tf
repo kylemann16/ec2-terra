@@ -15,12 +15,20 @@ resource aws_vpc network {
     cidr_block = "10.0.0.0/16"
 }
 
-resource aws_subnet public_subnet {
+resource aws_subnet public_subnets {
+    count = length(local.azs)
     vpc_id = aws_vpc.network.id
-    cidr_block = "10.0.1.0/24"
-    availability_zone = local.azs[0]
+    cidr_block = "10.0.${count.index}.0/24"
+    availability_zone = local.azs[count.index]
     map_public_ip_on_launch = true
 }
+
+# resource aws_subnet public_subnet {
+#     vpc_id = aws_vpc.network.id
+#     cidr_block = "10.0.1.0/24"
+#     availability_zone = local.azs[0]
+#     map_public_ip_on_launch = true
+# }
 
 resource aws_security_group allow_ssh {
     name = "allow_ssh"
@@ -39,9 +47,6 @@ resource aws_security_group allow_ssh {
         protocol = -1
         cidr_blocks = ["0.0.0.0/0"]
     }
-    lifecycle {
-
-    }
 }
 
 resource aws_route_table route_table {
@@ -49,7 +54,8 @@ resource aws_route_table route_table {
 }
 
 resource aws_route_table_association subnet_route_connections {
-    subnet_id      = aws_subnet.public_subnet.id
+    count = length(aws_subnet.public_subnets)
+    subnet_id      = aws_subnet.public_subnets[count.index].id
     route_table_id = aws_route_table.route_table.id
 }
 
