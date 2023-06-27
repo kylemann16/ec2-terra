@@ -22,6 +22,11 @@ data aws_ami al2 {
     }
 }
 
+data "aws_ssm_parameter" "ami" {
+  name = "/aws/service/ecs/optimized-ami/amazon-linux-2/gpu/recommended"
+}
+
+
 resource aws_instance instance {
     instance_type = var.instance_type
     tags = {
@@ -29,7 +34,7 @@ resource aws_instance instance {
     }
     user_data = filebase64("${path.module}/userdata.sh")
     subnet_id = aws_subnet.public_subnets[1].id
-    ami = data.aws_ami.al2.id
+    ami = jsondecode(data.aws_ssm_parameter.ami.value).image_id
     key_name = aws_key_pair.ec2_key_pair.key_name
     security_groups = [ aws_security_group.allow_ssh.id ]
     # instance_market_options {

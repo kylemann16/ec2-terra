@@ -15,12 +15,6 @@ mkdir /local
 mount "$EXT" /local
 chown -R ec2-user:users /local
 
-fallocate -l 64G /local/swapfile
-chmod 600 /local/swapfile
-mkswap /local/swapfile
-swapon /local/swapfile
-swapon -s
-
 
 read -r -d '' DOCKER_SETTINGS << EOM
 DAEMON_MAXFILES=1048576
