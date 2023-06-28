@@ -64,7 +64,7 @@ def get_slack_message_payload(
             instance_id = message['detail']['instance-id']
             ec2_client = boto3.client("ec2", region_name=REGION)
             instance_info = ec2_client.describe_instances(InstanceIds=[instance_id])
-            public_ip = instance_info['Reservations']['Instances'][0]['PublicIpAddress']
+            public_ip = instance_info['Reservations'][0]['Instances'][0]['PublicIpAddress']
             print('public ip', public_ip)
             message['public_ip'] = public_ip
         except json.JSONDecodeError:

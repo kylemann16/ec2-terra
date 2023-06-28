@@ -8,6 +8,14 @@ variable instance_type {
     default = "g4dn.4xlarge"
 }
 
+variable aws_region {
+    type = string
+}
+
+provider aws {
+    region = var.aws_region
+}
+
 data "aws_ssm_parameter" "ami" {
   name = "/aws/service/ecs/optimized-ami/amazon-linux-2/gpu/recommended"
 }
