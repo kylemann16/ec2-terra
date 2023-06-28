@@ -4,7 +4,8 @@ resource aws_sns_topic ec2_ip_update {
     name = "ec2_ip_update"
 }
 
-data "aws_caller_identity" "current" {}
+data aws_region current {}
+data aws_caller_identity "current" {}
 
 resource aws_sns_topic_policy ec2_ip_update_policy {
     arn = aws_sns_topic.ec2_ip_update.arn
@@ -115,6 +116,7 @@ resource aws_lambda_function notification_lambda {
     environment {
         variables = {
             SLACK_WEBHOOK_URL = var.slack_webhook_url
+            AWS_REGION = data.aws_region.current.name
         }
     }
 }
